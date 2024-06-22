@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('statutL');
             $table->date('date');
             $table->integer('prixL');
+            $table->integer('id_vendeur');
             $table->timestamps();
         });
     }

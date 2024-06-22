@@ -16,7 +16,7 @@ class PostController extends Controller
     {
         $post = new Post();
 
-        $post = 
+        // $post = 
     }
 }
 
