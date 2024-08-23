@@ -25,11 +25,20 @@ Route::post('posts/create', [PostController::class, 'store']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::put('/modifpassword', [AuthController::class, 'modifpassword']);
+Route::get('/categories', [AuthController::class, 'categorie']);
+Route::get('/listelivre', [AuthController::class, 'listelivre']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
-    Route::get('/createlivre', [AuthController::class, 'createlivre']);
+    Route::post('/createlivre', [AuthController::class, 'createlivre']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/addcart/{id}', [AuthController::class, 'addart']);
+    Route::get('/cart', [AuthController::class, 'viewcart']);
+    Route::delete('/deletelivrecart/{id}', [AuthController::class, 'deletelivrecart']);
+    Route::get('/paiement', [AuthController::class, 'paiement']);
+    Route::post('/validatepaiement', [AuthController::class, 'validatepaiement']);
+    Route::get('/livrecategorie/{categorie}', [AuthController::class, 'livrecategorie']);
+    Route::put('/rechargesolde', [AuthController::class, 'rechargesolde']);
 });
