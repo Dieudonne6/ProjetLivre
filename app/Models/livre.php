@@ -12,7 +12,7 @@ class Livre extends Model
     protected $fillable = [
         'nomL',
         'categorieL',
-        'descriptions',
+        'description',
         'path',
         'date',
         'prixL',
