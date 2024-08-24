@@ -19,4 +19,10 @@ class Livre extends Model
         'statutL',
         'id_vendeur'
     ];
+
+        // Définir la relation avec le modèle Categorie
+        public function categorie()
+        {
+            return $this->belongsTo(Categorie::class, 'categorieL');
+        }
 }

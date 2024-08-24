@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('livres', function (Blueprint $table) {
             $table->id();
             $table->string('nomL');
-            $table->string('categorieL');
+            $table->foreignId('categorieL')->constrained()->onDelete('cascade'); // Clé étrangère vers categories
+            // $table->string('categorieL');
             $table->longText('description');
             $table->binary('path');
             $table->string('statutL');

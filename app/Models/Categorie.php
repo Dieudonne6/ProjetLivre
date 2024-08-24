@@ -13,4 +13,9 @@ class Categorie extends Model
     Protected $fillable = [
         'nom'
     ];
+
+    public function livres()
+    {
+        return $this->hasMany(Livre::class, 'categorieL');
+    }
 }
