@@ -27,6 +27,11 @@ class User extends Authenticatable
         'solde'
     ];
 
+    public function livres()
+    {
+        return $this->hasMany(Livre::class, 'id_vendeur');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

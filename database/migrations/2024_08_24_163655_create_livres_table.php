@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('statutL');
             $table->date('date');
             $table->integer('prixL');
-            $table->integer('id_vendeur');
+            $table->foreignId('id_vendeur')->constrained()->onDelete('cascade'); // Clé étrangère vers categories
+            // $table->integer('id_vendeur');
             $table->timestamps();
         });
     }

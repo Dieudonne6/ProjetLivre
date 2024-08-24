@@ -799,7 +799,7 @@ class AuthController extends Controller
  */
     public function listelivre() {
 
-        $livres = Livre::with('categorie')->get();
+        $livres = Livre::with('categorie')->with('vendeur')->get();
         // $categories = Categorie::all();
         
         // dd($livres);

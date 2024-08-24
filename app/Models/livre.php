@@ -25,4 +25,9 @@ class Livre extends Model
         {
             return $this->belongsTo(Categorie::class, 'categorieL');
         }
+
+        public function vendeur()
+        {
+            return $this->belongsTo(User::class, 'id_vendeur');
+        }
 }

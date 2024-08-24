@@ -976,6 +976,41 @@
                 ]
             }
         },
+        "/api/listemessage": {
+            "get": {
+                "tags": [
+                    "message"
+                ],
+                "summary": "Liste des messages",
+                "operationId": "76cb44b15a2afd4310167e2238413f95",
+                "responses": {
+                    "200": {
+                        "description": "Liste des messages retournée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "listemessages": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/modifpassword": {
             "put": {
                 "tags": [
@@ -1095,6 +1130,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "message",
+            "description": "message"
         }
     ]
 }
