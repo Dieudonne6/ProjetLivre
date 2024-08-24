@@ -793,6 +793,7 @@ class AuthController extends Controller
     public function listelivre() {
 
         $livres = Livre::all();
+        
         // dd($livres);
         
         return response()->json([
