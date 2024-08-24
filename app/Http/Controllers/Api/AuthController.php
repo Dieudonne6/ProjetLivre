@@ -14,6 +14,7 @@ use App\Models\Livre;
 use App\Models\Panier;
 use App\Models\Commande;
 use App\Models\Categorie;
+use App\Models\Message;
 
 class AuthController extends Controller
 {
@@ -244,6 +245,12 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        // generer un message de connexion pour les notifications
+        $user = Message::create([
+            'id_user' => $user->id,
+            'message' => "Vous êtes maintenant connecté à votre compte.",
+        ]);
 
         return response()-> json([
             'token' => $token,
@@ -959,6 +966,53 @@ class AuthController extends Controller
 
        
 
+    }
+
+    // public function creermessage(Request $request) {
+    //     $user = $request->user();
+    //     $iduser = $user->id;
+
+    //     $user = Message::create([
+
+    //         'message' => $request->message,
+    //     ]);
+
+    //     return response()-> json([
+    //         'msg' => 'message ajouter avec succes',  
+    //         'status' => 200
+    //     ]);
+
+    // }
+
+
+        // LISTE DES MESSAGES
+/**
+ * @OA\Get(
+ *      path="/api/listemessage",
+ *      tags={"message"},
+ *      summary="Liste des messages",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Liste des messages retournée avec succès",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="listemessages", type="array", @OA\Items(type="object")),
+ *              @OA\Property(property="status", type="integer"),
+ *              @OA\Property(property="msg", type="string")
+ *          )
+ *      )
+ * )
+ */
+
+    public function listemessage() {
+        $listemessages = Message::get();
+
+        return response()->json ([
+            'status' => 200,
+            'listemessages' => $listemessages,
+            'msg' => "liste des messages retournée avec succès"
+        ]);
+
+        
     }
 
     // MOT DE PASSE OUBLIE

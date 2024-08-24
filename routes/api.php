@@ -28,6 +28,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::put('/modifpassword', [AuthController::class, 'modifpassword']);
 Route::get('/categories', [AuthController::class, 'categorie']);
 Route::get('/listelivre', [AuthController::class, 'listelivre']);
+Route::get('/listemessage', [AuthController::class, 'listemessage']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -40,5 +41,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/paiement', [AuthController::class, 'paiement']);
     Route::post('/validatepaiement', [AuthController::class, 'validatepaiement']);
     Route::get('/livrecategorie/{categorie}', [AuthController::class, 'livrecategorie']);
+    // Route::post('/creermessage', [AuthController::class, 'creermessage']);
     Route::put('/rechargesolde', [AuthController::class, 'rechargesolde']);
 });
