@@ -181,29 +181,20 @@
                 }
             }
         },
-        "/api/user": {
-            "get": {
+        "/api/logout": {
+            "post": {
                 "tags": [
-                    "User"
+                    "Logout"
                 ],
-                "summary": "Get user data",
-                "operationId": "961ad57987905b44ae2e2f40b82e76de",
+                "summary": "Logout user",
+                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
                 "responses": {
                     "200": {
-                        "description": "success",
+                        "description": "Utilisateur déconnecté",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "user": {
-                                            "type": "object"
-                                        },
-                                        "userlivre": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
                                         "msg": {
                                             "type": "string"
                                         },
@@ -242,13 +233,311 @@
                 ]
             }
         },
+        "/api/modifpassword": {
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Réinitialiser le mot de passe de l'utilisateur",
+                "operationId": "50c93785aed310d03a7ec506abd5646d",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "example": {
+                                "email": "jean@gmail.com",
+                                "password": "newpassword"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mot de passe réinitialisé avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "infoUser": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur de validation ou email non retrouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/addcart/{id}": {
+            "post": {
+                "tags": [
+                    "Panier"
+                ],
+                "summary": "Add book to cart",
+                "operationId": "96a48541f74b8f5e456f9a3ad449fd65",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Livre ajouté au panier avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "panier": {
+                                            "type": "object"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/cart": {
+            "get": {
+                "tags": [
+                    "Panier"
+                ],
+                "summary": "View cart",
+                "operationId": "b59a70997dfdd532dad7d6eef7e19437",
+                "responses": {
+                    "200": {
+                        "description": "Affichage des livres ajoutés au panier",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "panier": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "prixtotal": {
+                                            "type": "number"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/deletelivrecart/{id}": {
+            "delete": {
+                "tags": [
+                    "Panier"
+                ],
+                "summary": "Remove book from cart",
+                "operationId": "d4b4944ba510577f8434d04843df4307",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Livre retiré du panier avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Obtenir la liste des catégories",
+                "operationId": "fcb926398fcfe0880099e0d963a69def",
+                "responses": {
+                    "200": {
+                        "description": "Liste des catégories retournée avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "categories": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/createlivre": {
             "post": {
                 "tags": [
                     "Livre"
                 ],
                 "summary": "Create a new book",
-                "operationId": "21935b4c3247795a02f2d98926074c6a",
+                "operationId": "e5a865203ff0694114b7bb171f0d8750",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -356,145 +645,70 @@
                 ]
             }
         },
-        "/api/logout": {
-            "post": {
-                "tags": [
-                    "Logout"
-                ],
-                "summary": "Logout user",
-                "operationId": "ad65cbbd4e9f201619eae184a5961a98",
-                "responses": {
-                    "200": {
-                        "description": "Utilisateur déconnecté",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/addcart/{id}": {
-            "post": {
-                "tags": [
-                    "Panier"
-                ],
-                "summary": "Add book to cart",
-                "operationId": "59cb3d0acb146e3bf99f522d1e36db29",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Livre ajouté au panier avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "panier": {
-                                            "type": "object"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/api/cart": {
+        "/api/listelivre": {
             "get": {
                 "tags": [
-                    "Panier"
+                    "Livre"
                 ],
-                "summary": "View cart",
-                "operationId": "897d569521795138ea73be3f4540fa1e",
+                "summary": "Obtenir la liste de tous les livres",
+                "operationId": "5bdc60e120881b291aa16196c7efb07b",
                 "responses": {
                     "200": {
-                        "description": "Affichage des livres ajoutés au panier",
+                        "description": "Liste des livres retournée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "panier": {
+                                        "livres": {
                                             "type": "array",
                                             "items": {
                                                 "type": "object"
                                             }
                                         },
-                                        "prixtotal": {
-                                            "type": "number"
+                                        "status": {
+                                            "type": "integer"
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/livrecategorie/{categorie}": {
+            "get": {
+                "tags": [
+                    "Livre"
+                ],
+                "summary": "Obtenir la liste des livres par catégorie",
+                "operationId": "f5b50e9002c595a8829acc587d6aa010",
+                "parameters": [
+                    {
+                        "name": "categorie",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Livres triés par catégorie retournés avec succès",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "livreCat": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
                                         },
                                         "status": {
                                             "type": "integer"
@@ -534,53 +748,31 @@
                 ]
             }
         },
-        "/api/deletelivrecart/{id}": {
-            "delete": {
+        "/api/listemessage": {
+            "get": {
                 "tags": [
-                    "Panier"
+                    "message"
                 ],
-                "summary": "Remove book from cart",
-                "operationId": "4d1def683e10b1652be37ab12f0d96a8",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
+                "summary": "Liste des messages",
+                "operationId": "30d4c1b717666509bb4689e47f0e7c95",
                 "responses": {
                     "200": {
-                        "description": "Livre retiré du panier avec succès",
+                        "description": "Liste des messages retournée avec succès",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "msg": {
-                                            "type": "string"
+                                        "listemessages": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
                                         },
                                         "status": {
                                             "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
+                                        },
                                         "msg": {
                                             "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
                                         }
                                     },
                                     "type": "object"
@@ -588,12 +780,7 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
+                }
             }
         },
         "/api/paiement": {
@@ -602,7 +789,7 @@
                     "Paiement"
                 ],
                 "summary": "Obtenir les informations nécessaires pour effectuer le paiement",
-                "operationId": "d93a0442ac6cf76a6f9bde832475b3ad",
+                "operationId": "cbd6b41b431b3a1368a1462ce2a70cc0",
                 "responses": {
                     "200": {
                         "description": "Informations de paiement récupérées avec succès",
@@ -660,7 +847,7 @@
                     "Paiement"
                 ],
                 "summary": "Valider le paiement et enregistrer la commande",
-                "operationId": "638c1b56c94c5028436554e08204712b",
+                "operationId": "c56491a7b05c5b20b538d3fb09405a3f",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -748,111 +935,34 @@
                 ]
             }
         },
-        "/api/listelivre": {
+        "/api/user": {
             "get": {
                 "tags": [
-                    "Livre"
+                    "User"
                 ],
-                "summary": "Obtenir la liste de tous les livres",
-                "operationId": "cb114b59dda01ed5664b41b987e0e5fd",
+                "summary": "Get user data",
+                "operationId": "fd8e4e27fd1a9e98a6638cec7e2126ca",
                 "responses": {
                     "200": {
-                        "description": "Liste des livres retournée avec succès",
+                        "description": "success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "livres": {
+                                        "user": {
+                                            "type": "object"
+                                        },
+                                        "userlivre": {
                                             "type": "array",
                                             "items": {
                                                 "type": "object"
                                             }
                                         },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
                                             "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/categories": {
-            "get": {
-                "tags": [
-                    "Categories"
-                ],
-                "summary": "Obtenir la liste des catégories",
-                "operationId": "e0b2144c1de0fc0d4d3d8fa3bf794647",
-                "responses": {
-                    "200": {
-                        "description": "Liste des catégories retournée avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "categories": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
                                         },
                                         "status": {
                                             "type": "integer"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/livrecategorie/{categorie}": {
-            "get": {
-                "tags": [
-                    "Livre"
-                ],
-                "summary": "Obtenir la liste des livres par catégorie",
-                "operationId": "3c981c5fc63140716c6d5ae95b6da848",
-                "parameters": [
-                    {
-                        "name": "categorie",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Livres triés par catégorie retournés avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "livreCat": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
-                                        "msg": {
-                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -892,7 +1002,7 @@
                     "User"
                 ],
                 "summary": "Recharger le solde de l'utilisateur",
-                "operationId": "061bca0a34188faa123613852499be8a",
+                "operationId": "7994a17655a98ad300d34b48a832f158",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -975,116 +1085,6 @@
                     }
                 ]
             }
-        },
-        "/api/listemessage": {
-            "get": {
-                "tags": [
-                    "message"
-                ],
-                "summary": "Liste des messages",
-                "operationId": "76cb44b15a2afd4310167e2238413f95",
-                "responses": {
-                    "200": {
-                        "description": "Liste des messages retournée avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "listemessages": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
-                                            }
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/modifpassword": {
-            "put": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "Réinitialiser le mot de passe de l'utilisateur",
-                "operationId": "50c93785aed310d03a7ec506abd5646d",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "properties": {
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            },
-                            "example": {
-                                "email": "jean@gmail.com",
-                                "password": "newpassword"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Mot de passe réinitialisé avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "infoUser": {
-                                            "type": "object"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Erreur de validation ou email non retrouvé",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "errors": {
-                                            "type": "object"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
     },
     "components": {
@@ -1108,32 +1108,32 @@
             "description": "Login"
         },
         {
-            "name": "User",
-            "description": "User"
-        },
-        {
-            "name": "Livre",
-            "description": "Livre"
-        },
-        {
             "name": "Logout",
             "description": "Logout"
+        },
+        {
+            "name": "User",
+            "description": "User"
         },
         {
             "name": "Panier",
             "description": "Panier"
         },
         {
-            "name": "Paiement",
-            "description": "Paiement"
-        },
-        {
             "name": "Categories",
             "description": "Categories"
         },
         {
+            "name": "Livre",
+            "description": "Livre"
+        },
+        {
             "name": "message",
             "description": "message"
+        },
+        {
+            "name": "Paiement",
+            "description": "Paiement"
         }
     ]
 }
