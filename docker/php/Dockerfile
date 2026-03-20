@@ -21,11 +21,23 @@ FROM php:8.2-fpm
 
 # Installer dépendances système
 # Installer dépendances système pour PostgreSQL, Git, ZIP
-RUN apt-get update && apt-get install -y \
+# RUN apt-get update && apt-get install -y \
+#     git \
+#     unzip \
+#     libzip-dev \
+#     libpq-dev \   # <-- nécessaire pour pdo_pgsql
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
     libzip-dev \
-    libpq-dev \   # <-- nécessaire pour pdo_pgsql
+    libpq-dev \
+    libonig-dev \
+    zlib1g-dev \
+    # libpq-dev est nécessaire pour pdo_pgsql
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Installer composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
