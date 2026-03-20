@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('livres', function (Blueprint $table) {
             $table->id();
             $table->string('nomL');
-            $table->foreignId('categorieL')->constrained()->onDelete('cascade'); // Clé étrangère vers categories
+            $table->foreignId('categorieL')->constrained('categories')->onDelete('cascade');
             // $table->string('categorieL');
             $table->longText('description');
             $table->binary('path');
             $table->string('statutL');
             $table->date('date');
             $table->integer('prixL');
-            $table->foreignId('id_vendeur')->constrained()->onDelete('cascade'); // Clé étrangère vers categories
+            $table->foreignId('id_vendeur')->constrained('users')->onDelete('cascade'); // Clé étrangère vers categories
             // $table->integer('id_vendeur');
             $table->timestamps();
         });
