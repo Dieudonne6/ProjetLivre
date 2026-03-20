@@ -3,18 +3,14 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\Livre;
-use App\Models\Categorie;
 
 class ImportBooks extends Command
 {
     protected $signature = 'import:books';
-    protected $description = 'Import books data from an external API';
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Import books data from Google Books API';
 
     public function handle()
     {
@@ -27,16 +23,20 @@ class ImportBooks extends Command
         $books = $response->json('items');
 
         foreach ($books as $book) {
-            Livre::updateOrCreate(
-                // ['titre' => $book['volumeInfo']['title']],
+
+            $title = $book['volumeInfo']['title'];
+
+            $pdfPath = $this->generateFakePdf($title);
+
+            Livre::create(
                 [
-                    'nomL' => $book['volumeInfo']['title'],
-                    'categorieL' => random_int(1, 9),
-                    'description' => $book['volumeInfo']['description'] ?? 'Description non disponible', // Ajouter la description
-                    'path' => $this->generatePdfContent('Contenu du PDF pour ' . $book['volumeInfo']['title']),
-                    'id_vendeur' => random_int(1, 10),
-                    'statutL' => random_int(0, 1),
-                    'prixL' => random_int(0, 8500),
+                    'nomL' => $title,
+                    'categorieL' => random_int(1,9),
+                    'description' => $book['volumeInfo']['description'] ?? 'Description non disponible',
+                    'path' => $pdfPath,
+                    'id_vendeur' => random_int(1,10),
+                    'statutL' => random_int(0,1),
+                    'prixL' => random_int(0,8500),
                     'date' => now()->format('Y-m-d'),
                 ]
             );
@@ -45,18 +45,16 @@ class ImportBooks extends Command
         $this->info('Books imported successfully!');
     }
 
-    protected function getCategorieId($categorieName)
+    protected function generateFakePdf($title)
     {
-        return Categorie::firstOrCreate(['nom' => $categorieName])->id;
-    }
+        $filename = Str::slug($title).'_'.time().'.pdf';
 
-    protected function generatePdfContent($content)
-    {
-        // Créez un contenu PDF factice (remplacez par votre logique PDF si nécessaire)
-        // Ici nous utilisons une chaîne simple pour l'exemple, vous pouvez remplacer cette logique par du vrai contenu PDF
-        $pdfContent = "PDF Content: " . $content;
+        $path = 'livres/'.$filename;
 
-        // Encode le contenu en base64 pour le stockage en base de données
-        return base64_encode($pdfContent);
+        $content = "Fake PDF content for book: ".$title;
+
+        Storage::disk('public')->put($path, $content);
+
+        return $path;
     }
 }
