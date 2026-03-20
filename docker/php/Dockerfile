@@ -26,7 +26,6 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     libpq-dev \   # <-- nécessaire pour pdo_pgsql
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
 # Installer composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -36,6 +35,8 @@ WORKDIR /var/www
 
 # Copier le projet
 COPY . .
+
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
 # Installer dépendances Laravel
 RUN composer install --no-interaction --optimize-autoloader
