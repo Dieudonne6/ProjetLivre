@@ -20,11 +20,13 @@
 FROM php:8.2-fpm
 
 # Installer dépendances système
+# Installer dépendances système pour PostgreSQL, Git, ZIP
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
-    && docker-php-ext-install pdo pdo_mysql
+    libpq-dev \   # <-- nécessaire pour pdo_pgsql
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
 # Installer composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -34,8 +36,6 @@ WORKDIR /var/www
 
 # Copier le projet
 COPY . .
-
-RUN docker-php-ext-install pdo pdo_pgsql
 
 # Installer dépendances Laravel
 RUN composer install --no-interaction --optimize-autoloader
