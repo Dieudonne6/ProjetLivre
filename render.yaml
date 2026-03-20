@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: projetlivre
+    env: docker
+    plan: free
+    branch: master
+    dockerfilePath: ./docker/php/Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
