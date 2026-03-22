@@ -18,7 +18,6 @@ return new class extends Migration
             // $table->string('categorieL');
             $table->longText('description');
             $table->binary('path');
-            $table->string('statutL');
             $table->date('date');
             $table->integer('prixL');
             $table->foreignId('id_vendeur')->constrained('users')->onDelete('cascade'); // Clé étrangère vers categories

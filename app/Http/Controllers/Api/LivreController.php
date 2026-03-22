@@ -39,7 +39,7 @@ class LivreController extends Controller
  *         @OA\MediaType(
  *             mediaType="multipart/form-data",
  *             @OA\Schema(
- *                 required={"nomL","categorieL","description","path","statutL","date","prixL"},
+ *                 required={"nomL","categorieL","description","path","date","prixL"},
  *
  *                 @OA\Property(
  *                     property="nomL",

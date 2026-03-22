@@ -33,7 +33,6 @@ class LivreFactory extends Factory
             //     now()->format('Y-m-d')                 // Date de fin (aujourd'hui)
             // ),
             'prixL' => $this->faker->numberBetween(0, 8500),
-            'statutL' => $this->faker->numberBetween(0, 1),
             'id_vendeur' => $this->faker->numberBetween(1, 10),
         ];
     }

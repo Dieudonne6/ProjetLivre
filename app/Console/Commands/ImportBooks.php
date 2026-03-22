@@ -54,7 +54,6 @@ class ImportBooks extends Command
                     'description' => $book['volumeInfo']['description'] ?? 'Description non disponible',
                     'path' => $pdfPath,
                     'id_vendeur' => random_int(1,10),
-                    'statutL' => random_int(0,1),
                     'prixL' => random_int(0,8500),
                     'date' => now()->format('Y-m-d'),
                 ]

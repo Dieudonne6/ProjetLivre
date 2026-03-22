@@ -16,7 +16,6 @@ class Livre extends Model
         'path',
         'date',
         'prixL',
-        'statutL',
         'id_vendeur'
     ];
 
