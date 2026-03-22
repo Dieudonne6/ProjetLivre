@@ -17,23 +17,16 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:155',
-            'email' => 'required|email|unique:users,email|max:155',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'password' => 'required|string|min:6',
-            'telephone' => 'required|string|max:8',
-            'statut' => 'required|integer'
+            'email' => 'required|email|max:155',
+            'password' => 'required|string|min:6'
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'Le nom est obligatoire',
             'email.required' => 'L\'email est obligatoire',
-            'email.unique' => 'Cet email existe déjà',
             'password.min' => 'Le mot de passe doit contenir au moins 6 caractères',
-            'image.image' => 'Le fichier doit être une image',
         ];
     }
 }
