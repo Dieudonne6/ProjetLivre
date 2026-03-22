@@ -15,7 +15,6 @@ class LivreResource extends JsonResource
             'description' => $this->description,
             'categorie' => $this->categorieL,
             'prix' => $this->prixL,
-            'statut' => $this->statutL,
             'date' => $this->date,
             'vendeur' => $this->vendeur?->name,
             'pdf_url' => asset('storage/'.$this->path)

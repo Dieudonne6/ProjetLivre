@@ -24,7 +24,7 @@ class LivreService
             'path' => $path,
             'date' => $request->date,
             'prixL' => $request->prixL,
-            'statutL' => $request->statutL,
+            // 'statutL' => $request->statutL,
             'id_vendeur' => $user->id
         ]);
     }

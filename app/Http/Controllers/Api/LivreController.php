@@ -68,13 +68,6 @@ class LivreController extends Controller
  *                 ),
  *
  *                 @OA\Property(
- *                     property="statutL",
- *                     type="integer",
- *                     example=1,
- *                     description="1 = published, 0 = draft"
- *                 ),
- *
- *                 @OA\Property(
  *                     property="date",
  *                     type="string",
  *                     format="date",
@@ -185,7 +178,6 @@ public function createlivre(StoreLivreRequest $request)
  *                  @OA\Property(property="nomL", type="string", example="Treasure Island"),
  *                  @OA\Property(property="description", type="string", example="A young boy finds a treasure map leading to a pirate's fortune."),
  *                  @OA\Property(property="prixL", type="number", example=15.99),
- *                  @OA\Property(property="statutL", type="integer", example=1),
  *                  @OA\Property(property="date", type="string", format="date", example="2026-03-13")
  *              )
  *          )

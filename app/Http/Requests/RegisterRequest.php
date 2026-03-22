@@ -29,11 +29,22 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Le nom est obligatoire',
-            'email.required' => 'L\'email est obligatoire',
-            'email.unique' => 'Cet email existe déjà',
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères',
-            'image.image' => 'Le fichier doit être une image',
+            'name.required' => 'The name is required.',
+            'name.max' => 'The name must not exceed 155 characters.',
+            'email.required' => 'The email address is required.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.unique' => 'This email is already registered.',
+            'email.max' => 'The email must not exceed 155 characters.',
+            'image.required' => 'An image file is required.',
+            'image.image' => 'The uploaded file must be an image.',
+            'image.mimes' => 'Supported image formats are: jpeg, png, jpg, gif, svg.',
+            'image.max' => 'The image size must not exceed 2MB.',
+            'password.required' => 'A password is required.',
+            'password.min' => 'The password must be at least 6 characters.',
+            'telephone.required' => 'The phone number is required.',
+            'telephone.max' => 'The phone number must not exceed 8 characters.',
+            'statut.required' => 'The status field is required.',
+            'statut.integer' => 'The status must be an integer value.',
         ];
     }
 }

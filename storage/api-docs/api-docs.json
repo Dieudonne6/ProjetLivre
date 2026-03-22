@@ -552,11 +552,6 @@
                                         "type": "string",
                                         "format": "binary"
                                     },
-                                    "statutL": {
-                                        "description": "1 = published, 0 = draft",
-                                        "type": "integer",
-                                        "example": 1
-                                    },
                                     "date": {
                                         "type": "string",
                                         "format": "date",
@@ -635,10 +630,6 @@
                                             "prixL": {
                                                 "type": "number",
                                                 "example": 15.99
-                                            },
-                                            "statutL": {
-                                                "type": "integer",
-                                                "example": 1
                                             },
                                             "date": {
                                                 "type": "string",

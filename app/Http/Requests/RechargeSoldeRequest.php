@@ -17,16 +17,16 @@ class RechargeSoldeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'solde' => 'required|numeric|min:1'
+            'solde' => 'required|numeric|min:10'
         ];
     }
 
     public function messages()
     {
         return [
-            'solde.required' => 'Le montant est obligatoire',
-            'solde.numeric' => 'Le montant doit être un nombre',
-            'solde.min' => 'Le montant doit être supérieur à 0'
+            'solde.required' => 'The amount is required.',
+            'solde.numeric' => 'The amount must be a numeric value.',
+            'solde.min' => 'The amount must be at least 10.',
         ];
     }
 }

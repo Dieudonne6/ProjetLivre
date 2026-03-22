@@ -25,8 +25,11 @@ class LoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'L\'email est obligatoire',
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères',
+            'email.required' => 'The email address is required.',
+            'email.email' => 'Please provide a valid email address.',
+            'email.max' => 'The email must not exceed 155 characters.',
+            'password.required' => 'The password is required.',
+            'password.min' => 'The password must be at least 6 characters.',
         ];
     }
 }
