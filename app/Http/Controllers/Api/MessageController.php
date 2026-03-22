@@ -10,19 +10,32 @@ class MessageController extends Controller
 {
             // LISTE DES MESSAGES
 /**
+ * Get all messages
  * @OA\Get(
- *      path="/api/listemessage",
- *      tags={"message"},
- *      summary="Liste des messages",
- *      @OA\Response(
- *          response=200,
- *          description="Liste des messages retournée avec succès",
- *          @OA\JsonContent(
- *              @OA\Property(property="listemessages", type="array", @OA\Items(type="object")),
- *              @OA\Property(property="status", type="integer"),
- *              @OA\Property(property="msg", type="string")
- *          )
- *      )
+ *     path="/api/listemessage",
+ *     tags={"Messages"},
+ *     summary="Retrieve all messages",
+ *     description="Return the list of messages stored in the system.",
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="Messages retrieved successfully",
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(
+ *                 property="messages",
+ *                 type="array",
+ *                 @OA\Items(type="object"),
+ *                 description="List of system messages"
+ *             ),
+ *
+ *             @OA\Property(
+ *                 property="msg",
+ *                 type="string",
+ *                 example="Messages retrieved successfully"
+ *             )
+ *         )
+ *     )
  * )
  */
 
@@ -31,8 +44,8 @@ class MessageController extends Controller
 
         return response()->json ([
             // 'status' => 200,
-            'listemessages' => $listemessages,
-            'msg' => "liste des messages retournée avec succès"
+            'messages' => $listemessages,
+            'msg' => "Messages retrieved successfully"
         ], 200);
 
         

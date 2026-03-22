@@ -9,65 +9,85 @@
         "/api/register": {
             "post": {
                 "tags": [
-                    "Register"
+                    "Authentication"
                 ],
-                "summary": "Register user",
+                "summary": "Register a new user",
+                "description": "Creates a new user account (buyer or seller)",
                 "operationId": "8e4e3cb7b46126f4696379d3c7eeb4ad",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "multipart/form-data": {
                             "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "telephone",
+                                    "statut",
+                                    "image"
+                                ],
                                 "properties": {
                                     "name": {
-                                        "type": "string"
+                                        "description": "Full name of the user",
+                                        "type": "string",
+                                        "example": "John Doe"
                                     },
                                     "email": {
+                                        "description": "User email address",
                                         "type": "string",
-                                        "format": "email"
+                                        "format": "email",
+                                        "example": "john.doe@gmail.com"
                                     },
                                     "image": {
+                                        "description": "User profile picture",
                                         "type": "string",
                                         "format": "binary"
                                     },
                                     "password": {
-                                        "type": "string"
+                                        "description": "User account password",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Password123!"
                                     },
                                     "telephone": {
-                                        "type": "string"
+                                        "description": "User phone number",
+                                        "type": "string",
+                                        "example": "97000000"
                                     },
                                     "statut": {
-                                        "type": "integer"
+                                        "description": "User type (0 = seller, 1 = buyer)",
+                                        "type": "integer",
+                                        "enum": [
+                                            0,
+                                            1
+                                        ],
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
-                            },
-                            "example": {
-                                "name": "jean",
-                                "email": "jean@gmail.com",
-                                "image": "image-file.jpg",
-                                "password": "password",
-                                "telephone": "12345678",
-                                "statut": 1
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "success",
+                    "201": {
+                        "description": "User successfully registered",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "token": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "1|f9c2f5e4f3c9c7f9d3f9"
                                         },
                                         "type": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Bearer"
                                         },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Registration completed successfully"
                                         }
                                     },
                                     "type": "object"
@@ -75,14 +95,22 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "validation error",
+                    "422": {
+                        "description": "Validation error",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "errors": {
-                                            "type": "object"
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "The email has already been taken."
+                                                ],
+                                                "password": [
+                                                    "The password must be at least 8 characters."
+                                                ]
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -96,11 +124,13 @@
         "/api/login": {
             "post": {
                 "tags": [
-                    "Login"
+                    "Authentication"
                 ],
-                "summary": "Se connecter et obtenir un token d'authentification",
+                "summary": "Login user and generate authentication token",
+                "description": "Authenticate a user using email and password and return a Bearer token.",
                 "operationId": "222b2625838e3c57e017987f73598fda",
                 "requestBody": {
+                    "description": "User credentials",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -111,16 +141,16 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "L'adresse e-mail de l'utilisateur",
+                                        "description": "Registered email address of the user",
                                         "type": "string",
                                         "format": "email",
-                                        "example": "user@example.com"
+                                        "example": "john.doe@gmail.com"
                                     },
                                     "password": {
-                                        "description": "Le mot de passe de l'utilisateur",
+                                        "description": "User account password",
                                         "type": "string",
                                         "format": "password",
-                                        "example": "password123"
+                                        "example": "Password123!"
                                     }
                                 },
                                 "type": "object"
@@ -130,25 +160,25 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Connexion réussie et token généré",
+                        "description": "Login successful",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "token": {
-                                            "description": "Le token d'authentification JWT",
+                                            "description": "Generated authentication token",
                                             "type": "string",
-                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                            "example": "1|Qh3kL2e9P0cTjY8pS1V"
                                         },
                                         "type": {
-                                            "description": "Le type du token d'authentification",
+                                            "description": "Token type used for authorization",
                                             "type": "string",
                                             "example": "Bearer"
                                         },
-                                        "status": {
-                                            "description": "Code de statut HTTP",
-                                            "type": "integer",
-                                            "example": 200
+                                        "msg": {
+                                            "description": "Success message",
+                                            "type": "string",
+                                            "example": "You are now logged in to your account."
                                         }
                                     },
                                     "type": "object"
@@ -157,20 +187,15 @@
                         }
                     },
                     "401": {
-                        "description": "Échec de la connexion, e-mail ou mot de passe incorrect",
+                        "description": "Invalid credentials",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "msg": {
-                                            "description": "Message d'erreur",
+                                            "description": "Authentication error message",
                                             "type": "string",
-                                            "example": "email ou mot de passe incorrect"
-                                        },
-                                        "status": {
-                                            "description": "Code de statut HTTP",
-                                            "type": "integer",
-                                            "example": 401
+                                            "example": "Invalid email or password"
                                         }
                                     },
                                     "type": "object"
@@ -184,22 +209,22 @@
         "/api/logout": {
             "post": {
                 "tags": [
-                    "Logout"
+                    "Authentication"
                 ],
-                "summary": "Logout user",
+                "summary": "Logout the authenticated user",
+                "description": "Invalidate the current authentication token of the logged-in user.",
                 "operationId": "ad65cbbd4e9f201619eae184a5961a98",
                 "responses": {
                     "200": {
-                        "description": "Utilisateur déconnecté",
+                        "description": "User successfully logged out",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                            "description": "Confirmation message",
+                                            "type": "string",
+                                            "example": "User successfully logged out"
                                         }
                                     },
                                     "type": "object"
@@ -208,16 +233,15 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "Unauthorized - Token missing or invalid",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                            "description": "Authentication error message",
+                                            "type": "string",
+                                            "example": "Unauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -238,45 +262,51 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Réinitialiser le mot de passe de l'utilisateur",
+                "summary": "Reset user password",
+                "description": "Update the password of a user using their email address.",
                 "operationId": "50c93785aed310d03a7ec506abd5646d",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
                                 "properties": {
                                     "email": {
+                                        "description": "User email address",
                                         "type": "string",
-                                        "format": "email"
+                                        "format": "email",
+                                        "example": "john.doe@gmail.com"
                                     },
                                     "password": {
-                                        "type": "string"
+                                        "description": "New password",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewSecurePassword123"
                                     }
                                 },
                                 "type": "object"
-                            },
-                            "example": {
-                                "email": "jean@gmail.com",
-                                "password": "newpassword"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Mot de passe réinitialisé avec succès",
+                        "description": "Password successfully reset",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "infoUser": {
+                                            "description": "Updated user information",
                                             "type": "object"
                                         },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Password successfully reset"
                                         }
                                     },
                                     "type": "object"
@@ -285,19 +315,14 @@
                         }
                     },
                     "401": {
-                        "description": "Erreur de validation ou email non retrouvé",
+                        "description": "Email not found",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "errors": {
-                                            "type": "object"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Email not found"
                                         }
                                     },
                                     "type": "object"
@@ -305,41 +330,47 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/addcart/{id}": {
             "post": {
                 "tags": [
-                    "Panier"
+                    "Cart"
                 ],
-                "summary": "Add book to cart",
+                "summary": "Add a book to the user's shopping cart",
+                "description": "Add a book to the cart",
                 "operationId": "96a48541f74b8f5e456f9a3ad449fd65",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Book ID",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 12
                         }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Livre ajouté au panier avec succès",
+                    "201": {
+                        "description": "Book successfully added to cart",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "panier": {
-                                            "type": "object"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Book added to cart successfully"
+                                        },
+                                        "cart": {
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -348,22 +379,10 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Book not found"
                     }
                 },
                 "security": [
@@ -376,31 +395,31 @@
         "/api/cart": {
             "get": {
                 "tags": [
-                    "Panier"
+                    "Cart"
                 ],
-                "summary": "View cart",
+                "summary": "Retrieve all books currently in the user cart",
+                "description": "View user cart",
                 "operationId": "b59a70997dfdd532dad7d6eef7e19437",
                 "responses": {
                     "200": {
-                        "description": "Affichage des livres ajoutés au panier",
+                        "description": "Cart retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "panier": {
+                                        "booksCart": {
                                             "type": "array",
                                             "items": {
                                                 "type": "object"
                                             }
                                         },
-                                        "prixtotal": {
-                                            "type": "number"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                        "Amount": {
+                                            "type": "number",
+                                            "example": 54.9
                                         },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Books in cart retrieved successfully"
                                         }
                                     },
                                     "type": "object"
@@ -409,22 +428,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -437,56 +441,32 @@
         "/api/deletelivrecart/{id}": {
             "delete": {
                 "tags": [
-                    "Panier"
+                    "Cart"
                 ],
-                "summary": "Remove book from cart",
+                "summary": "Remove a specific book from the user's cart",
+                "description": "Remove a book from the cart",
                 "operationId": "d4b4944ba510577f8434d04843df4307",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Cart item ID",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 5
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Livre retiré du panier avec succès",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Book removed from cart successfully"
+                    },
+                    "404": {
+                        "description": "item not found"
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -501,26 +481,26 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "Obtenir la liste des catégories",
+                "summary": "Retrieve all book categories",
+                "description": "Return the list of available book categories.",
                 "operationId": "fcb926398fcfe0880099e0d963a69def",
                 "responses": {
                     "200": {
-                        "description": "Liste des catégories retournée avec succès",
+                        "description": "Categories retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "categories": {
+                                            "description": "List of categories",
                                             "type": "array",
                                             "items": {
                                                 "type": "object"
                                             }
                                         },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Categories retrieved successfully"
                                         }
                                     },
                                     "type": "object"
@@ -534,84 +514,77 @@
         "/api/createlivre": {
             "post": {
                 "tags": [
-                    "Livre"
+                    "Books"
                 ],
                 "summary": "Create a new book",
+                "description": "Allow a seller to upload and publish a new book.",
                 "operationId": "e5a865203ff0694114b7bb171f0d8750",
                 "requestBody": {
                     "required": true,
                     "content": {
                         "multipart/form-data": {
                             "schema": {
+                                "required": [
+                                    "nomL",
+                                    "categorieL",
+                                    "description",
+                                    "path",
+                                    "statutL",
+                                    "date",
+                                    "prixL"
+                                ],
                                 "properties": {
                                     "nomL": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "The Art of Programming"
                                     },
                                     "categorieL": {
-                                        "type": "string"
+                                        "description": "Category ID",
+                                        "type": "integer",
+                                        "example": 2
                                     },
                                     "description": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "example": "A complete guide to modern programming concepts."
                                     },
                                     "path": {
+                                        "description": "PDF file of the book",
                                         "type": "string",
                                         "format": "binary"
                                     },
                                     "statutL": {
-                                        "type": "integer"
+                                        "description": "1 = published, 0 = draft",
+                                        "type": "integer",
+                                        "example": 1
                                     },
                                     "date": {
                                         "type": "string",
-                                        "format": "date"
+                                        "format": "date",
+                                        "example": "2026-03-22"
                                     },
                                     "prixL": {
-                                        "type": "number"
+                                        "type": "number",
+                                        "example": 2500
                                     }
                                 },
                                 "type": "object"
-                            },
-                            "example": {
-                                "nomL": "Titre du Livre",
-                                "categorieL": "Categorie",
-                                "description": "Description du livre",
-                                "path": "file.pdf",
-                                "statutL": 1,
-                                "date": "2024-07-24",
-                                "prixL": 100
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "Livre ajouté avec succès",
+                    "201": {
+                        "description": "Book created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Book successfully created"
                                         },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "errors": {
+                                        "book": {
                                             "type": "object"
-                                        },
-                                        "status": {
-                                            "type": "integer"
                                         }
                                     },
                                     "type": "object"
@@ -620,22 +593,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -648,31 +606,48 @@
         "/api/listelivre": {
             "get": {
                 "tags": [
-                    "Livre"
+                    "Books"
                 ],
-                "summary": "Obtenir la liste de tous les livres",
+                "summary": "Retrieve the list of all available books",
+                "description": "Get all books",
                 "operationId": "5bdc60e120881b291aa16196c7efb07b",
                 "responses": {
                     "200": {
-                        "description": "Liste des livres retournée avec succès",
+                        "description": "List of books retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
-                                        "livres": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object"
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "nomL": {
+                                                "type": "string",
+                                                "example": "Treasure Island"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "A young boy finds a treasure map leading to a pirate's fortune."
+                                            },
+                                            "prixL": {
+                                                "type": "number",
+                                                "example": 15.99
+                                            },
+                                            "statutL": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2026-03-13"
                                             }
                                         },
-                                        "status": {
-                                            "type": "integer"
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
+                                        "type": "object"
+                                    }
                                 }
                             }
                         }
@@ -683,38 +658,39 @@
         "/api/livrecategorie/{categorie}": {
             "get": {
                 "tags": [
-                    "Livre"
+                    "Books"
                 ],
-                "summary": "Obtenir la liste des livres par catégorie",
+                "summary": "Retrieve books belonging to a specific category",
+                "description": "Get books by category",
                 "operationId": "f5b50e9002c595a8829acc587d6aa010",
                 "parameters": [
                     {
                         "name": "categorie",
                         "in": "path",
+                        "description": "Category ID",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "example": 3
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Livres triés par catégorie retournés avec succès",
+                        "description": "Books filtered by category retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "livreCat": {
+                                        "books": {
                                             "type": "array",
                                             "items": {
                                                 "type": "object"
                                             }
                                         },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Books filtered by category successfully retrieved"
                                         }
                                     },
                                     "type": "object"
@@ -723,22 +699,10 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Category not found"
                     }
                 },
                 "security": [
@@ -751,28 +715,28 @@
         "/api/listemessage": {
             "get": {
                 "tags": [
-                    "message"
+                    "Messages"
                 ],
-                "summary": "Liste des messages",
+                "summary": "Retrieve all messages",
+                "description": "Return the list of messages stored in the system.",
                 "operationId": "30d4c1b717666509bb4689e47f0e7c95",
                 "responses": {
                     "200": {
-                        "description": "Liste des messages retournée avec succès",
+                        "description": "Messages retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "listemessages": {
+                                        "messages": {
+                                            "description": "List of system messages",
                                             "type": "array",
                                             "items": {
                                                 "type": "object"
                                             }
                                         },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
-                                            "type": "string"
+                                            "type": "string",
+                                            "example": "Messages retrieved successfully"
                                         }
                                     },
                                     "type": "object"
@@ -786,46 +750,28 @@
         "/api/paiement": {
             "get": {
                 "tags": [
-                    "Paiement"
+                    "Payment"
                 ],
-                "summary": "Obtenir les informations nécessaires pour effectuer le paiement",
+                "summary": "Retrieve payment details including total cart price",
+                "description": "Get payment information",
                 "operationId": "cbd6b41b431b3a1368a1462ce2a70cc0",
                 "responses": {
                     "200": {
-                        "description": "Informations de paiement récupérées avec succès",
+                        "description": "Payment information retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "utilisateur": {
+                                        "user": {
                                             "type": "object"
                                         },
-                                        "prixtotal": {
-                                            "type": "number"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                        "amount": {
+                                            "type": "number",
+                                            "example": 75.5
                                         },
                                         "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                            "type": "string",
+                                            "example": "Payment information retrieved successfully"
                                         }
                                     },
                                     "type": "object"
@@ -844,44 +790,21 @@
         "/api/validatepaiement": {
             "post": {
                 "tags": [
-                    "Paiement"
+                    "Payment"
                 ],
-                "summary": "Valider le paiement et enregistrer la commande",
+                "summary": "Validate payment and create an order",
+                "description": "Validate payment",
                 "operationId": "c56491a7b05c5b20b538d3fb09405a3f",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "solde"
-                                ],
-                                "properties": {
-                                    "solde": {
-                                        "description": "Le solde disponible pour effectuer le paiement",
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 150
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
-                        "description": "Paiement validé et commande enregistrée avec succès",
+                        "description": "Payment completed successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 200
-                                        },
                                         "msg": {
                                             "type": "string",
-                                            "example": "Achat effectué avec succès"
+                                            "example": "Purchase completed successfully"
                                         }
                                     },
                                     "type": "object"
@@ -890,18 +813,14 @@
                         }
                     },
                     "400": {
-                        "description": "Erreur lors du paiement, solde insuffisant",
+                        "description": "Insufficient balance",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "status": {
-                                            "type": "integer",
-                                            "example": 400
-                                        },
                                         "msg": {
                                             "type": "string",
-                                            "example": "Solde insuffisant pour effectuer l'achat"
+                                            "example": "Insufficient balance to complete the purchase"
                                         }
                                     },
                                     "type": "object"
@@ -909,17 +828,15 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "404": {
+                        "description": "No item in cart",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                            "type": "string",
+                                            "example": "Error, No data in your cart"
                                         }
                                     },
                                     "type": "object"
@@ -940,29 +857,37 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Get user data",
+                "summary": "Get authenticated user data",
+                "description": "Retrieve information about the authenticated user. If the user is a seller, the API returns their books. If the user is a buyer, it returns all available books.",
                 "operationId": "fd8e4e27fd1a9e98a6638cec7e2126ca",
                 "responses": {
                     "200": {
-                        "description": "success",
+                        "description": "User data retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "user": {
+                                            "description": "Authenticated user information",
                                             "type": "object"
                                         },
                                         "userlivre": {
+                                            "description": "Books belonging to the seller",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "allbooks": {
+                                            "description": "All books available for buyers",
                                             "type": "array",
                                             "items": {
                                                 "type": "object"
                                             }
                                         },
                                         "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                            "type": "string",
+                                            "example": "User books retrieved successfully"
                                         }
                                     },
                                     "type": "object"
@@ -977,10 +902,8 @@
                                 "schema": {
                                     "properties": {
                                         "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
+                                            "type": "string",
+                                            "example": "Unauthorized"
                                         }
                                     },
                                     "type": "object"
@@ -1001,58 +924,43 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Recharger le solde de l'utilisateur",
+                "summary": "Recharge user account balance",
+                "description": "Add funds to the authenticated user's balance.",
                 "operationId": "7994a17655a98ad300d34b48a832f158",
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "solde"
+                                ],
                                 "properties": {
                                     "solde": {
-                                        "type": "number"
+                                        "description": "Amount to add to the user balance",
+                                        "type": "number",
+                                        "example": 100
                                     }
                                 },
                                 "type": "object"
-                            },
-                            "example": {
-                                "solde": 100
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Solde rechargé avec succès",
+                        "description": "Balance successfully recharged",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "utilisateurConnect": {
-                                            "type": "object"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        },
                                         "msg": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Erreur de validation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "errors": {
-                                            "type": "object"
+                                            "type": "string",
+                                            "example": "Balance successfully recharged"
                                         },
-                                        "status": {
-                                            "type": "integer"
+                                        "user": {
+                                            "description": "Updated user information",
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -1061,22 +969,7 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        },
-                                        "status": {
-                                            "type": "integer"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "description": "Unauthorized"
                     }
                 },
                 "security": [
@@ -1100,40 +993,32 @@
     },
     "tags": [
         {
-            "name": "Register",
-            "description": "Register"
-        },
-        {
-            "name": "Login",
-            "description": "Login"
-        },
-        {
-            "name": "Logout",
-            "description": "Logout"
+            "name": "Authentication",
+            "description": "Authentication"
         },
         {
             "name": "User",
             "description": "User"
         },
         {
-            "name": "Panier",
-            "description": "Panier"
+            "name": "Cart",
+            "description": "Cart"
         },
         {
             "name": "Categories",
             "description": "Categories"
         },
         {
-            "name": "Livre",
-            "description": "Livre"
+            "name": "Books",
+            "description": "Books"
         },
         {
-            "name": "message",
-            "description": "message"
+            "name": "Messages",
+            "description": "Messages"
         },
         {
-            "name": "Paiement",
-            "description": "Paiement"
+            "name": "Payment",
+            "description": "Payment"
         }
     ]
 }

@@ -14,27 +14,19 @@ class PaiementController extends Controller
 {
         // formulaire contenant les information pour effectuer le paiement
 /**
+ * Get payment information
  * @OA\Get(
  *      path="/api/paiement",
- *      tags={"Paiement"},
- *          security={{"bearerAuth":{}}},
- *          summary="Obtenir les informations nécessaires pour effectuer le paiement",
+ *      tags={"Payment"},
+ *      security={{"bearerAuth":{}}},
+ *      summary="Retrieve payment details including total cart price",
  *      @OA\Response(
  *          response=200,
- *          description="Informations de paiement récupérées avec succès",
+ *          description="Payment information retrieved successfully",
  *          @OA\JsonContent(
- *              @OA\Property(property="utilisateur", type="object"),
- *              @OA\Property(property="prixtotal", type="number"),
- *              @OA\Property(property="status", type="integer"),
- *              @OA\Property(property="msg", type="string")
- *          )
- *      ),
- *      @OA\Response(
- *          response=401,
- *           description="Unauthorized",
- *           @OA\JsonContent(
- *               @OA\Property(property="msg", type="string"),
- *               @OA\Property(property="status", type="integer")
+ *              @OA\Property(property="user", type="object"),
+ *              @OA\Property(property="amount", type="number", example=75.50),
+ *              @OA\Property(property="msg", type="string", example="Payment information retrieved successfully")
  *          )
  *      )
  * )
@@ -46,53 +38,41 @@ class PaiementController extends Controller
         $prixtotal = Panier::where('idacheteur', $idUtilisateur)->sum('prix');
 
         return response()->json([
-            'utilisateur' => $utilisateur,
-            'prixtotal' => $prixtotal,
+            'user' => $utilisateur,
+            'amount' => $prixtotal,
             // 'status' => 200,
-            'msg' => 'Donnees necessaire au paiement recuperees avec succes'
+            'msg' => 'Payment information retrieved successfully'
         ], 200);
 
     }
 
     // valider le paiememt
 /**
+ * Validate payment
  * @OA\Post(
  *      path="/api/validatepaiement",
- *          tags={"Paiement"},
- *          security={{"bearerAuth":{}}},
- *          summary="Valider le paiement et enregistrer la commande",
- *      @OA\RequestBody(
- *          @OA\MediaType(
- *              mediaType="application/json",
- *              @OA\Schema(
- *                  type="object",
- *                  required={"solde"},
- *                  @OA\Property(property="solde", type="number", format="float", example=150, description="Le solde disponible pour effectuer le paiement")
- *              )
- *          )
- *      ),
+ *      tags={"Payment"},
+ *      security={{"bearerAuth":{}}},
+ *      summary="Validate payment and create an order",
  *      @OA\Response(
  *          response=200,
- *          description="Paiement validé et commande enregistrée avec succès",
+ *          description="Payment completed successfully",
  *          @OA\JsonContent(
- *              @OA\Property(property="status", type="integer", example=200),
- *              @OA\Property(property="msg", type="string", example="Achat effectué avec succès")
+ *              @OA\Property(property="msg", type="string", example="Purchase completed successfully")
  *          )
  *      ),
  *      @OA\Response(
  *          response=400,
- *          description="Erreur lors du paiement, solde insuffisant",
+ *          description="Insufficient balance",
  *          @OA\JsonContent(
- *              @OA\Property(property="status", type="integer", example=400),
- *              @OA\Property(property="msg", type="string", example="Solde insuffisant pour effectuer l'achat")
+ *              @OA\Property(property="msg", type="string", example="Insufficient balance to complete the purchase")
  *          )
  *      ),
  *      @OA\Response(
- *          response=401,
- *           description="Unauthorized",
- *           @OA\JsonContent(
- *               @OA\Property(property="msg", type="string"),
- *               @OA\Property(property="status", type="integer")
+ *          response=404,
+ *          description="No item in cart",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="msg", type="string", example="Error, No data in your cart")
  *          )
  *      )
  * )
@@ -101,6 +81,14 @@ class PaiementController extends Controller
         $infoachet = $request->user();
         $idacheteur = $request->user()->id;
         $prixtotal = Panier::where('idacheteur', $idacheteur)->sum('prix');
+
+
+        if (!$prixtotal ) {
+            return response()->json([
+                'msg' => 'Error, No data in your cart'
+            ], 404);
+        }
+
 
         if(($prixtotal) <= ($infoachet->solde)) {
 
@@ -153,7 +141,7 @@ class PaiementController extends Controller
                 DB::commit();
 
                 return response()->json([
-                    'msg' => 'Achat effectué avec succès'
+                    'msg' => 'Purchase completed successfully'
                 ], 200);
 
             } catch (\Exception $e) {
@@ -161,14 +149,14 @@ class PaiementController extends Controller
                 DB::rollBack();
 
                 return response()->json([
-                    'msg' => 'Erreur lors du paiement'
+                    'msg' => 'Error'
                 ], 500);
             }
 
         } else {
             return response()->json([
                 // 'status' => 400,
-                'msg' => "solde insuffisant pour effetuer l'achat"
+                'msg' => "Insufficient balance to complete the purchase"
             ], 400);
         }
 

@@ -4,48 +4,56 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Livre;
+use App\Models\Panier;
 
 class CartController extends Controller
 {
         // Ajout de livre au panier
 /**
-     * Add book to cart
-     * @OA\Post(
-     *      path="/api/addcart/{id}",
-     *      tags={"Panier"},
-     *          security={{"bearerAuth":{}}},
-     *      @OA\Parameter(
-     *          name="id",
-     *          in="path",
-     *          required=true,
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Livre ajouté au panier avec succès",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="panier", type="object"),
-     *              @OA\Property(property="status", type="integer"),
-     *              @OA\Property(property="msg", type="string"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=401,
-     *           description="Unauthorized",
-     *           @OA\JsonContent(
-     *               @OA\Property(property="msg", type="string"),
-     *               @OA\Property(property="status", type="integer")
-     *          )
-     *      )
-     * )
-     */
+ * Add a book to the cart
+ * @OA\Post(
+ *      path="/api/addcart/{id}",
+ *      tags={"Cart"},
+ *      security={{"bearerAuth":{}}},
+ *      summary="Add a book to the user's shopping cart",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="Book ID",
+ *          @OA\Schema(type="integer", example=12)
+ *      ),
+ *      @OA\Response(
+ *          response=201,
+ *          description="Book successfully added to cart",
+ *          @OA\JsonContent(
+ *              @OA\Property(property="msg", type="string", example="Book added to cart successfully"),
+ *              @OA\Property(property="cart", type="object")
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthorized"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Book not found"
+ *      )
+ * )
+ */
     public function addart(Request $request, $id){
         $userconnect = $request->user();
 
         $idlivre = $id;
         $infolivre = Livre::find($idlivre);
+
+        if (!$infolivre) {
+            return response() ->json ([
+                // 'status' => 200,
+                'msg' => 'Book not found'
+            ], 404);
+        }
 
         $cart = new Panier();
         $cart->nom = $infolivre->nomL;
@@ -58,39 +66,47 @@ class CartController extends Controller
         $cart->save();
 
         return response() ->json ([
-            'panier' => $cart,
+            'cart' => $cart,
             // 'status' => 200,
-            'msg' => 'livre ajouter au panier avec succes'
+            'msg' => 'Book added to cart successfully'
         ], 201);
     }
 
     // voir les livres du panier
- /**
-     * View cart
-     * @OA\Get(
-     *      path="/api/cart",
-     *      tags={"Panier"},
-     *          security={{"bearerAuth":{}}},
-     *      @OA\Response(
-     *          response=200,
-     *          description="Affichage des livres ajoutés au panier",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="panier", type="array", @OA\Items(type="object")),
-     *              @OA\Property(property="prixtotal", type="number"),
-     *              @OA\Property(property="status", type="integer"),
-     *              @OA\Property(property="msg", type="string"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=401,
-     *           description="Unauthorized",
-     *           @OA\JsonContent(
-     *               @OA\Property(property="msg", type="string"),
-     *               @OA\Property(property="status", type="integer")
-     *          )
-     *      )
-     * )
-     */
+/**
+ * View user cart
+ * @OA\Get(
+ *      path="/api/cart",
+ *      tags={"Cart"},
+ *      security={{"bearerAuth":{}}},
+ *      summary="Retrieve all books currently in the user cart",
+ *      @OA\Response(
+ *          response=200,
+ *          description="Cart retrieved successfully",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="booksCart",
+ *                  type="array",
+ *                  @OA\Items(type="object")
+ *              ),
+ *              @OA\Property(
+ *                  property="Amount",
+ *                  type="number",
+ *                  example=54.90
+ *              ),
+ *              @OA\Property(
+ *                  property="msg",
+ *                  type="string",
+ *                  example="Books in cart retrieved successfully"
+ *              )
+ *          )
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthorized"
+ *      )
+ * )
+ */
     public function viewcart(Request $request) {
         $acheteur = $request->user();
         $idacheteur = $acheteur->id;
@@ -99,53 +115,56 @@ class CartController extends Controller
         $prixtotal = Panier::where('idacheteur', $idacheteur)->sum('prix');
 
         return response()->json([
-            'livresPanier' => $livresPanier,
-            'prixtotal' => $prixtotal,
+            'booksCart' => $livresPanier,
+            'Amount' => $prixtotal,
             // 'status' => 200, 
-            'msg' => 'affichage des livres ajouter au panier'
+            'msg' => 'Books in cart retrieved successfully'
         ], 200);    
     }
 
     // supprimer un livre du panier
- /**
-     * Remove book from cart
-     * @OA\Delete(
-     *      path="/api/deletelivrecart/{id}",
-     *      tags={"Panier"},
-     *          security={{"bearerAuth":{}}},
-     *      @OA\Parameter(
-     *          name="id",
-     *          in="path",
-     *          required=true,
-     *          @OA\Schema(
-     *              type="integer"
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Livre retiré du panier avec succès",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="msg", type="string"),
-     *              @OA\Property(property="status", type="integer"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *           response=401,
-     *           description="Unauthorized",
-     *           @OA\JsonContent(
-     *               @OA\Property(property="msg", type="string"),
-     *               @OA\Property(property="status", type="integer")
-     *          )
-     *      )
-     * )
-     */
+/**
+ * Remove a book from the cart
+ * @OA\Delete(
+ *      path="/api/deletelivrecart/{id}",
+ *      tags={"Cart"},
+ *      security={{"bearerAuth":{}}},
+ *      summary="Remove a specific book from the user's cart",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="Cart item ID",
+ *          @OA\Schema(type="integer", example=5)
+ *      ),
+ *      @OA\Response(
+ *          response=200,
+ *          description="Book removed from cart successfully"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="item not found"
+ *      ),
+ *      @OA\Response(
+ *          response=401,
+ *          description="Unauthorized"
+ *      )
+ * )
+ */
     public function deletelivrecart ($id) {
-        $livrepanier = Panier::findOrFail($id);
+        $livrepanier = Panier::find($id);
+        if(!$livrepanier) {
+            return response()->json([
+                // 'status' => 200,
+                'msg' => 'item not found',
+            ], 404);
+        }
+
         $livrepanier->delete();
 
         return response()->json([
             // 'status' => 200,
-            'msg' => 'livre supprimer du panier avec succes',
-        ], 204);
+            'msg' => 'Book removed from cart successfully',
+        ], 200);
     }
 }

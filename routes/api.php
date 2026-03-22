@@ -31,7 +31,6 @@ Route::post('posts/create', [PostController::class, 'store']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::put('/modifpassword', [AuthController::class, 'modifpassword']);
 Route::get('/categories', [CategoryController::class, 'categorie']);
 Route::get('/listelivre', [LivreController::class, 'listelivre']);
 Route::get('/listemessage', [MessageController::class, 'listemessage']);
@@ -39,6 +38,7 @@ Route::get('/listemessage', [MessageController::class, 'listemessage']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'user']);
+    Route::put('/modifpassword', [AuthController::class, 'modifpassword']);
     Route::post('/createlivre', [LivreController::class, 'createlivre']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/addcart/{id}', [CartController::class, 'addart']);

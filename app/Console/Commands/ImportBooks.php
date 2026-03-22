@@ -24,6 +24,25 @@ class ImportBooks extends Command
 
         foreach ($books as $book) {
 
+        // $response = Http::timeout(30)->get(
+        // 'https://www.googleapis.com/books/v1/volumes',
+        // ['q' => 'programming']
+        // );
+
+        // if (!$response->ok()) {
+        //     $this->error('Impossible de récupérer les livres');
+        //     return Command::FAILURE;
+        // }
+
+        // $books = $response->json()['items'] ?? [];
+
+        // if (empty($books)) {
+        //     $this->warn('Aucun livre trouvé');
+        //     return Command::SUCCESS;
+        // }
+
+        // foreach ($books as $book) {
+
             $title = $book['volumeInfo']['title'];
 
             $pdfPath = $this->generateFakePdf($title);

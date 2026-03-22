@@ -27,70 +27,111 @@ class LivreController extends Controller
 /**
  * Create a new book
  * @OA\Post(
- *      path="/api/createlivre",
- *      tags={"Livre"},
- *      security={{"bearerAuth":{}}},
- *      @OA\RequestBody(
- *           required=true,
- *           @OA\MediaType(
- *              mediaType="multipart/form-data",
- *              @OA\Schema(
- *                  @OA\Property(property="nomL", type="string"),
- *                  @OA\Property(property="categorieL", type="string"),
- *                  @OA\Property(property="description", type="string"),
- *                  @OA\Property(property="path", type="string", format="binary"),
- *                  @OA\Property(property="statutL", type="integer"),
- *                  @OA\Property(property="date", type="string", format="date"),
- *                  @OA\Property(property="prixL", type="number")
- *              ),
- *              example={
- *                  "nomL":"Titre du Livre",
- *                  "categorieL":"Categorie",
- *                  "description":"Description du livre",
- *                  "path":"file.pdf",
- *                  "statutL":1,
- *                  "date":"2024-07-24",
- *                  "prixL":100
- *              }
- *          )
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Livre ajouté avec succès",
- *          @OA\JsonContent(
- *              @OA\Property(property="msg", type="string"),
- *              @OA\Property(property="status", type="integer"),
- *          )
- *      ),
- *      @OA\Response(
- *          response=400,
- *          description="Validation error",
- *          @OA\JsonContent(
- *              @OA\Property(property="errors", type="object"),
- *              @OA\Property(property="status", type="integer"),
- *          )
- *      ),
- *      @OA\Response(
- *          response=401,
- *           description="Unauthorized",
- *           @OA\JsonContent(
- *               @OA\Property(property="msg", type="string"),
- *               @OA\Property(property="status", type="integer")
- *          )
- *      )
+ *     path="/api/createlivre",
+ *     tags={"Books"},
+ *     summary="Create a new book",
+ *     description="Allow a seller to upload and publish a new book.",
+ *
+ *     security={{"bearerAuth":{}}},
+ *
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="multipart/form-data",
+ *             @OA\Schema(
+ *                 required={"nomL","categorieL","description","path","statutL","date","prixL"},
+ *
+ *                 @OA\Property(
+ *                     property="nomL",
+ *                     type="string",
+ *                     example="The Art of Programming"
+ *                 ),
+ *
+ *                 @OA\Property(
+ *                     property="categorieL",
+ *                     type="integer",
+ *                     example=2,
+ *                     description="Category ID"
+ *                 ),
+ *
+ *                 @OA\Property(
+ *                     property="description",
+ *                     type="string",
+ *                     example="A complete guide to modern programming concepts."
+ *                 ),
+ *
+ *                 @OA\Property(
+ *                     property="path",
+ *                     type="string",
+ *                     format="binary",
+ *                     description="PDF file of the book"
+ *                 ),
+ *
+ *                 @OA\Property(
+ *                     property="statutL",
+ *                     type="integer",
+ *                     example=1,
+ *                     description="1 = published, 0 = draft"
+ *                 ),
+ *
+ *                 @OA\Property(
+ *                     property="date",
+ *                     type="string",
+ *                     format="date",
+ *                     example="2026-03-22"
+ *                 ),
+ *
+ *                 @OA\Property(
+ *                     property="prixL",
+ *                     type="number",
+ *                     example=2500
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=201,
+ *         description="Book created successfully",
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(
+ *                 property="msg",
+ *                 type="string",
+ *                 example="Book successfully created"
+ *             ),
+ *
+ *             @OA\Property(
+ *                 property="book",
+ *                 type="object"
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized"
+ *     )
  * )
  */
 
 public function createlivre(StoreLivreRequest $request)
 {
+
+    if ($request->user()->statut === 1) {
+        return response()->json([
+            'msg' => 'Unauthorized',
+        ],401);
+    }
+
     $livre = $this->livreService->createLivre(
         $request,
         $request->user()
     );
 
     return response()->json([
-        'msg' => 'Livre ajouté avec succès',
-        'livre' => new LivreResource($livre)
+        'msg' => 'Book successfully created',
+        'book' => new LivreResource($livre)
     ],201);
 }
 
@@ -129,17 +170,24 @@ public function createlivre(StoreLivreRequest $request)
 
         // LISTE DE TOUS LES LIVRES
 /**
+ * Get all books
  * @OA\Get(
  *      path="/api/listelivre",
- *      tags={"Livre"},
- *      summary="Obtenir la liste de tous les livres",
+ *      tags={"Books"},
+ *      summary="Retrieve the list of all available books",
  *      @OA\Response(
  *          response=200,
- *          description="Liste des livres retournée avec succès",
+ *          description="List of books retrieved successfully",
  *          @OA\JsonContent(
- *              @OA\Property(property="livres", type="array", @OA\Items(type="object")),
- *              @OA\Property(property="status", type="integer"),
- *              @OA\Property(property="msg", type="string")
+ *              type="array",
+ *              @OA\Items(
+ *                  @OA\Property(property="id", type="integer", example=1),
+ *                  @OA\Property(property="nomL", type="string", example="Treasure Island"),
+ *                  @OA\Property(property="description", type="string", example="A young boy finds a treasure map leading to a pirate's fortune."),
+ *                  @OA\Property(property="prixL", type="number", example=15.99),
+ *                  @OA\Property(property="statutL", type="integer", example=1),
+ *                  @OA\Property(property="date", type="string", format="date", example="2026-03-13")
+ *              )
  *          )
  *      )
  * )
@@ -150,48 +198,48 @@ public function createlivre(StoreLivreRequest $request)
 
             return LivreResource::collection($livres);
         
-        // dd($livres);
-        
-        // return response()->json([
-        //     'livres' => $livres,
-        //     // 'status' => 200,
-        //     'msg' => "liste des livres retournee avec succes"
-        // ], 200);
     }
 
 
 
     // LISTE DES LIVRES PAR CATEGORIE
 /**
+ * Get books by category
  * @OA\Get(
  *      path="/api/livrecategorie/{categorie}",
- *      tags={"Livre"},
+ *      tags={"Books"},
  *      security={{"bearerAuth":{}}},
- *      summary="Obtenir la liste des livres par catégorie",
+ *      summary="Retrieve books belonging to a specific category",
  *      @OA\Parameter(
  *          name="categorie",
  *          in="path",
  *          required=true,
- *          @OA\Schema(
- *              type="string"
- *          )
+ *          description="Category ID",
+ *          @OA\Schema(type="integer", example=3)
  *      ),
  *      @OA\Response(
  *          response=200,
- *          description="Livres triés par catégorie retournés avec succès",
+ *          description="Books filtered by category retrieved successfully",
  *          @OA\JsonContent(
- *              @OA\Property(property="livreCat", type="array", @OA\Items(type="object")),
- *              @OA\Property(property="status", type="integer"),
- *              @OA\Property(property="msg", type="string")
+ *              @OA\Property(
+ *                  property="books",
+ *                  type="array",
+ *                  @OA\Items(type="object")
+ *              ),
+ *              @OA\Property(
+ *                  property="msg",
+ *                  type="string",
+ *                  example="Books filtered by category successfully retrieved"
+ *              )
  *          )
  *      ),
  *      @OA\Response(
-*            response=401,
- *           description="Unauthorized",
- *           @OA\JsonContent(
- *               @OA\Property(property="msg", type="string"),
- *               @OA\Property(property="status", type="integer")
- *          )
+ *          response=401,
+ *          description="Unauthorized"
+ *      ),
+ *      @OA\Response(
+ *          response=404,
+ *          description="Category not found"
  *      )
  * )
  */
@@ -200,10 +248,17 @@ public function createlivre(StoreLivreRequest $request)
         // $category = $categorie;
         $livreCat = Livre::where('categorieL', '=', $categorie)->get();
 
+        if(!$livreCat) {
+            return response() ->json ([
+                // 'status' => 200,
+                'msg' => 'Category not found'
+            ], 201);
+        }
+
         return response()->json([
-            'livreCat' => $livreCat,
+            'books' => $livreCat,
             // 'status' => 200,
-            'msg' => "livre trié par categories avec succes"
+            'msg' => "Books filtered by category successfully retrieved"
         ], 200);
     }
 

@@ -15,33 +15,63 @@ use App\Http\Requests\RechargeSoldeRequest;
 class UserController extends Controller
 {
         //RECUPERATION DONNEE DE L'UTILISATEUR CONNECTER
- /**
-     * Get user data
-     * @OA\Get(
-     *      path="/api/user",
-     *      tags={"User"},
-     *      security={{"bearerAuth":{}}},
-     *      @OA\Response(
-     *          response=200,
-     *          description="success",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="user", type="object"),
-     *              @OA\Property(property="userlivre", type="array", @OA\Items(type="object")),
-     *              @OA\Property(property="msg", type="string"),
-     *              @OA\Property(property="status", type="integer"),
-     *          )
-     *      ),
-     * 
-     *      @OA\Response(
-     *         response=401,
-     *         description="Unauthorized",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="msg", type="string"),
-     *             @OA\Property(property="status", type="integer")
-     *         )
-     *     )
-     * )
-     */
+/**
+ * Get authenticated user information
+ * @OA\Get(
+ *     path="/api/user",
+ *     tags={"User"},
+ *     summary="Get authenticated user data",
+ *     description="Retrieve information about the authenticated user. If the user is a seller, the API returns their books. If the user is a buyer, it returns all available books.",
+ *
+ *     security={{"bearerAuth":{}}},
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="User data retrieved successfully",
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(
+ *                 property="user",
+ *                 type="object",
+ *                 description="Authenticated user information"
+ *             ),
+ *
+ *             @OA\Property(
+ *                 property="userlivre",
+ *                 type="array",
+ *                 @OA\Items(type="object"),
+ *                 description="Books belonging to the seller"
+ *             ),
+ *
+ *             @OA\Property(
+ *                 property="allbooks",
+ *                 type="array",
+ *                 @OA\Items(type="object"),
+ *                 description="All books available for buyers"
+ *             ),
+ *
+ *             @OA\Property(
+ *                 property="msg",
+ *                 type="string",
+ *                 example="User books retrieved successfully"
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized",
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(
+ *                 property="msg",
+ *                 type="string",
+ *                 example="Unauthorized"
+ *             )
+ *         )
+ *     )
+ * )
+ */
     public function user(Request $request) {
         $usercon = $request->user();
         $idusercon = $usercon->id;
@@ -57,7 +87,7 @@ class UserController extends Controller
             return response() -> json([
                 'user' => $usercon,
                 'userlivre' => $userlivre,
-                'msg' => 'livre de l\'utilisateur recuperer avec succes',
+                'msg' => 'User books retrieved successfully',
                 // 'status' => 200
             ], 200);
 
@@ -68,8 +98,8 @@ class UserController extends Controller
 
         return response() -> json([
             'user' => $usercon,
-            'alllivre' => $alllivre,
-            'msg' => 'livre de l\'utilisateur recuperer avec succes',
+            'allbooks' => $alllivre,
+            'msg' => 'User books retrieved successfully',
             // 'status' => 200
         ], 200);
 
@@ -78,47 +108,56 @@ class UserController extends Controller
 
         // RECHARGER SON SOLDE
 /**
+ * Recharge user balance
  * @OA\Put(
- *      path="/api/rechargesolde",
- *      tags={"User"},
- *      security={{"bearerAuth":{}}},
- *      summary="Recharger le solde de l'utilisateur",
- *      @OA\RequestBody(
- *          @OA\MediaType(
- *              mediaType="application/json",
- *              @OA\Schema(
- *                  @OA\Property(property="solde", type="number")
- *              ),
- *              example={
- *                  "solde": 100
- *              }
- *          )
- *      ),
- *      @OA\Response(
- *          response=200,
- *          description="Solde rechargé avec succès",
- *          @OA\JsonContent(
- *              @OA\Property(property="utilisateurConnect", type="object"),
- *              @OA\Property(property="status", type="integer"),
- *              @OA\Property(property="msg", type="string")
- *          )
- *      ),
- *      @OA\Response(
- *          response=400,
- *          description="Erreur de validation",
- *          @OA\JsonContent(
- *              @OA\Property(property="errors", type="object"),
- *              @OA\Property(property="status", type="integer")
- *          )
- *      ),
- *      @OA\Response(
-*            response=401,
- *           description="Unauthorized",
- *           @OA\JsonContent(
- *               @OA\Property(property="msg", type="string"),
- *               @OA\Property(property="status", type="integer")
- *          )
- *      )
+ *     path="/api/rechargesolde",
+ *     tags={"User"},
+ *     summary="Recharge user account balance",
+ *     description="Add funds to the authenticated user's balance.",
+ *
+ *     security={{"bearerAuth":{}}},
+ *
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\MediaType(
+ *             mediaType="application/json",
+ *             @OA\Schema(
+ *                 type="object",
+ *                 required={"solde"},
+ *
+ *                 @OA\Property(
+ *                     property="solde",
+ *                     type="number",
+ *                     example=100,
+ *                     description="Amount to add to the user balance"
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=200,
+ *         description="Balance successfully recharged",
+ *         @OA\JsonContent(
+ *
+ *             @OA\Property(
+ *                 property="msg",
+ *                 type="string",
+ *                 example="Balance successfully recharged"
+ *             ),
+ *
+ *             @OA\Property(
+ *                 property="user",
+ *                 type="object",
+ *                 description="Updated user information"
+ *             )
+ *         )
+ *     ),
+ *
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized"
+ *     )
  * )
  */
     public function rechargesolde(RechargeSoldeRequest $request)
@@ -128,7 +167,7 @@ class UserController extends Controller
         $user->increment('solde', $request->solde);
 
         return response()->json([
-            'msg' => 'Solde rechargé avec succès',
+            'msg' => 'Balance successfully recharged',
             'user' => $user
         ], 200);
     }
