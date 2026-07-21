@@ -1,66 +1,247 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 Book Marketplace API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API built with **Laravel** that allows users to buy and sell digital books.
 
-## About Laravel
+This project simulates a **digital marketplace** where:
+- Sellers can upload books and earn money.
+- Buyers can browse books, add them to a cart, and purchase them using their account balance.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The API is fully documented with **Swagger/OpenAPI**, containerized with **Docker**, and deployed using **PostgreSQL** in production.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🌐 Live API
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The API is deployed and publicly accessible:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Base URL:
+https://projetlivre-3.onrender.com
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Swagger Documentation:
+https://projetlivre-3.onrender.com/api/documentation
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
+# 🚀 Project Purpose
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+This project was built as part of a **backend developer portfolio** to demonstrate:
 
-## Contributing
+- REST API design
+- Authentication using Laravel Sanctum
+- Database design and transactions
+- API documentation with Swagger
+- Docker containerization
+- Clean architecture using services and resources
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+# architecture diagram
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Client
+   |
+Laravel API
+   |
+PostgreSQL
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 🛠 Tech Stack
 
-## License
+| Technology | Purpose |
+|------------|--------|
+| Laravel | Backend framework |
+| PostgreSQL | Production database |
+| MySQL | Local development database |
+| Docker | Containerization |
+| Laravel Sanctum | API Authentication |
+| Swagger (L5-Swagger) | API Documentation |
+| Eloquent ORM | Database interactions |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+# 📦 Main Features
+
+### 👤 Authentication
+- Register
+- Login
+- Logout
+- Password reset
+
+### 📚 Books
+- Upload books (Seller)
+- View all books
+- Filter books by category
+
+### 🛒 Cart
+- Add book to cart
+- View cart
+- Remove book from cart
+
+### 💳 Payment
+- Recharge account balance
+- Purchase books
+- Automatic balance transfer between buyer and seller
+
+
+---
+
+# 🧪 Test Accounts
+
+Two accounts are available for testing:
+
+### Buyer Account
+Email: buyer@gmail.com
+Password: buyer12345
+
+### Seller Account
+Email: seller@gmail.com
+Password: seller12345
+
+
+---
+
+# 📑 API Documentation
+
+Swagger documentation is available at:
+
+/api/documentation
+
+
+It allows you to:
+
+- explore all endpoints
+- test requests directly
+- see request/response examples
+
+---
+
+# 🔐 Authentication
+
+This API uses **Bearer Token Authentication (Laravel Sanctum)**.
+
+After login, include the token in requests:
+
+It allows you to:
+
+- explore all endpoints
+- test requests directly
+- see request/response examples
+
+---
+
+# 🔐 Authentication
+
+This API uses **Bearer Token Authentication (Laravel Sanctum)**.
+
+After login, include the token in requests:
+
+Authorisation: Bearer YOUR_TOKEN
+
+
+
+---
+
+# 📚 Example Workflow
+
+Typical buyer flow:
+
+1️⃣ Register or login  
+2️⃣ Browse available books  
+3️⃣ Add books to cart  
+4️⃣ Recharge account balance  
+5️⃣ Validate payment  
+6️⃣ Books are purchased and sellers receive payment
+
+---
+
+# 🧱 Database Entities
+
+Main tables:
+
+- users
+- livres (books)
+- categories
+- panier (cart)
+- commandes (orders)
+- messages
+
+---
+
+# 🐳 Running the Project with Docker
+
+Clone the repository:
+
+https://github.com/Dieudonne6/ProjetLivre.git
+
+
+Start containers:
+docker compose up -d
+
+Run migrations:
+php artisan migrate
+
+
+Generate Swagger docs:
+php artisan l5-swagger:generate
+
+
+---
+
+# 📂 Project Structure
+
+app
+├── Http
+│ ├── Controllers
+│   │── Api
+│ ├── Requests
+│ └── Resources
+├── Models
+├── Services
+database
+routes
+swagger
+
+
+---
+
+# 🔄 Payment Logic
+
+The payment system ensures transactional integrity:
+
+- Buyer balance is checked
+- Book prices are transferred to sellers
+- Orders are created
+- Cart is cleared
+
+All operations are wrapped inside a **database transaction**.
+
+---
+
+# 📈 What This Project Demonstrates
+
+This project highlights backend skills such as:
+
+✔ API architecture  
+✔ Authentication systems  
+✔ Secure transactions  
+✔ RESTful design  
+✔ Database relationships  
+✔ Dockerized environments  
+✔ API documentation
+
+---
+
+# 👨‍💻 Author
+
+K. Franck Dieu-donné AYENAN D.
+
+Backend Developer 
+
+---
+
+# 📬 Contact
+
+LinkedIn: **  
+Email: *kossoufranck6@gmail.com*
+
