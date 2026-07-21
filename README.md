@@ -188,22 +188,6 @@ php artisan l5-swagger:generate
 
 ---
 
-# 📂 Project Structure
-
-app
-├── Http
-│ ├── Controllers
-│   │── Api
-│ ├── Requests
-│ └── Resources
-├── Models
-├── Services
-database
-routes
-swagger
-
-
----
 
 # 🔄 Payment Logic
 
@@ -242,6 +226,5 @@ Backend Developer
 
 # 📬 Contact
 
-LinkedIn: **  
 Email: *kossoufranck6@gmail.com*
 
