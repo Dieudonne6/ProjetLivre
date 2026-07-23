@@ -1,197 +1,197 @@
 # 📚 Book Marketplace API
 
-API REST développée avec **Laravel 10**, permettant à des utilisateurs d'acheter et de vendre des livres numériques. Le projet simule une place de marché où les vendeurs mettent en ligne des livres et où les acheteurs les parcourent, les ajoutent à un panier, puis les achètent grâce à un solde crédité sur leur compte.
+A REST API built with **Laravel 10**, allowing users to buy and sell digital books. The project simulates a marketplace where sellers list books and buyers browse them, add them to a cart, and purchase them using a balance credited to their account.
 
-L'API est documentée avec **Swagger / OpenAPI**, conteneurisée avec **Docker**, et déployée en production avec **PostgreSQL**.
+The API is documented with **Swagger / OpenAPI**, containerized with **Docker**, and deployed to production with **PostgreSQL**.
 
 ---
 
-## 🌐 Démo en ligne
+## 🌐 Live Demo
 
-| Ressource | Lien |
+| Resource | Link |
 |---|---|
 | API (Base URL) | https://projetlivre-3.onrender.com |
-| Documentation Swagger | https://projetlivre-3.onrender.com/api/documentation |
+| Swagger Documentation | https://projetlivre-3.onrender.com/api/documentation |
 
 ---
 
-## 🎯 Objectif du projet
+## 🎯 Project Goal
 
-Ce projet a été réalisé dans le cadre d'un portfolio backend afin de mettre en pratique :
+This project was built as part of a backend portfolio to practice:
 
-- la conception d'une API REST ;
-- l'authentification par token avec **Laravel Sanctum** ;
-- la modélisation d'une base de données relationnelle et la gestion de transactions ;
-- la documentation d'API avec Swagger (L5-Swagger) ;
-- la conteneurisation avec Docker ;
-- une architecture propre basée sur les contrôleurs, requests et models Eloquent.
+- designing a REST API;
+- token-based authentication with **Laravel Sanctum**;
+- modeling a relational database and handling transactions;
+- API documentation with Swagger (L5-Swagger);
+- containerization with Docker;
+- a clean architecture based on controllers, requests, and Eloquent models.
 
 ---
 
 ## 🏗 Architecture
 
 ```
-Client (front / Swagger UI)
+Client (front-end / Swagger UI)
         │
         ▼
    Laravel API (Sanctum)
         │
         ▼
-  Base de données (MySQL en local / PostgreSQL en production)
+  Database (MySQL locally / PostgreSQL in production)
 ```
 
 ---
 
-## 🛠 Stack technique
+## 🛠 Tech Stack
 
-| Technologie | Rôle |
+| Technology | Role |
 |---|---|
-| Laravel 10 (PHP 8.1+) | Framework backend |
-| MySQL | Base de données en développement (via Docker) |
-| PostgreSQL | Base de données en production (Render) |
-| Laravel Sanctum | Authentification par token (Bearer) |
-| L5-Swagger (OpenAPI) | Documentation interactive de l'API |
-| Eloquent ORM | Accès et relations en base de données |
-| Docker / Docker Compose | Conteneurisation (app, nginx, mysql, phpMyAdmin) |
+| Laravel 10 (PHP 8.1+) | Backend framework |
+| MySQL | Development database (via Docker) |
+| PostgreSQL | Production database (Render) |
+| Laravel Sanctum | Token-based (Bearer) authentication |
+| L5-Swagger (OpenAPI) | Interactive API documentation |
+| Eloquent ORM | Database access and relationships |
+| Docker / Docker Compose | Containerization (app, nginx, mysql, phpMyAdmin) |
 
 ---
 
-## 📦 Fonctionnalités principales
+## 📦 Main Features
 
-### 👤 Authentification
-- Inscription (vendeur ou acheteur, avec photo de profil)
-- Connexion / déconnexion
-- Modification du mot de passe
+### 👤 Authentication
+- Registration (seller or buyer, with profile picture)
+- Login / logout
+- Password change
 
-### 📚 Livres
-- Publication d'un livre (vendeur)
-- Liste de tous les livres disponibles
-- Filtrage des livres par catégorie
-- Liste des catégories
+### 📚 Books
+- Publishing a book (seller)
+- List of all available books
+- Filtering books by category
+- List of categories
 
-### 🛒 Panier
-- Ajout d'un livre au panier
-- Consultation du panier
-- Suppression d'un livre du panier
+### 🛒 Cart
+- Adding a book to the cart
+- Viewing the cart
+- Removing a book from the cart
 
-### 💳 Paiement
-- Rechargement du solde du compte
-- Validation du paiement et création de la commande
-- Transfert automatique du montant entre l'acheteur et le(s) vendeur(s)
+### 💳 Payment
+- Topping up the account balance
+- Payment validation and order creation
+- Automatic amount transfer between the buyer and seller(s)
 
 ### 💬 Messages / Posts
-- Liste des messages
-- Liste et création de posts
+- List of messages
+- List and creation of posts
 
 ---
 
-## 🔗 Endpoints principaux
+## 🔗 Main Endpoints
 
-**Publics**
+**Public**
 
-| Méthode | Endpoint | Description |
+| Method | Endpoint | Description |
 |---|---|---|
-| POST | `/api/register` | Créer un compte |
-| POST | `/api/login` | Se connecter et récupérer un token |
-| GET | `/api/categories` | Liste des catégories |
-| GET | `/api/listelivre` | Liste des livres |
-| GET | `/api/listemessage` | Liste des messages |
-| GET | `/api/posts` | Liste des posts |
-| POST | `/api/posts/create` | Créer un post |
+| POST | `/api/register` | Create an account |
+| POST | `/api/login` | Log in and get a token |
+| GET | `/api/categories` | List of categories |
+| GET | `/api/listelivre` | List of books |
+| GET | `/api/listemessage` | List of messages |
+| GET | `/api/posts` | List of posts |
+| POST | `/api/posts/create` | Create a post |
 
-**Protégés (Sanctum — nécessitent un Bearer token)**
+**Protected (Sanctum — require a Bearer token)**
 
-| Méthode | Endpoint | Description |
+| Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/user` | Utilisateur connecté |
-| PUT | `/api/modifpassword` | Modifier le mot de passe |
-| POST | `/api/createlivre` | Publier un livre |
-| POST | `/api/logout` | Se déconnecter |
-| POST | `/api/addcart/{id}` | Ajouter un livre au panier |
-| GET | `/api/cart` | Voir le panier |
-| DELETE | `/api/deletelivrecart/{id}` | Retirer un livre du panier |
-| GET | `/api/paiement` | Informations de paiement |
-| POST | `/api/validatepaiement` | Valider le paiement / la commande |
-| GET | `/api/livrecategorie/{categorie}` | Livres d'une catégorie |
-| PUT | `/api/rechargesolde` | Recharger le solde du compte |
+| GET | `/api/user` | Currently authenticated user |
+| PUT | `/api/modifpassword` | Change password |
+| POST | `/api/createlivre` | Publish a book |
+| POST | `/api/logout` | Log out |
+| POST | `/api/addcart/{id}` | Add a book to the cart |
+| GET | `/api/cart` | View the cart |
+| DELETE | `/api/deletelivrecart/{id}` | Remove a book from the cart |
+| GET | `/api/paiement` | Payment information |
+| POST | `/api/validatepaiement` | Validate the payment / order |
+| GET | `/api/livrecategorie/{categorie}` | Books in a category |
+| PUT | `/api/rechargesolde` | Top up the account balance |
 
-La liste complète des routes, payloads et réponses est disponible dans la documentation Swagger.
+The complete list of routes, payloads, and responses is available in the Swagger documentation.
 
 ---
 
-## 🔐 Authentification
+## 🔐 Authentication
 
-L'API utilise l'authentification par **Bearer Token** via Laravel Sanctum.
+The API uses **Bearer Token** authentication via Laravel Sanctum.
 
-Après connexion, transmettre le token dans l'en-tête de chaque requête protégée :
+After logging in, pass the token in the header of every protected request:
 
 ```
-Authorization: Bearer VOTRE_TOKEN
+Authorization: Bearer YOUR_TOKEN
 ```
 
 ---
 
-## 🧱 Modèle de données (principales tables)
+## 🧱 Data Model (main tables)
 
 | Table | Description |
 |---|---|
-| `users` | Utilisateurs (vendeurs ou acheteurs), avec `statut` (0 = vendeur, 1 = acheteur) et `solde` |
-| `categories` | Catégories de livres |
-| `livres` | Livres publiés par les vendeurs (nom, description, prix, catégorie, vendeur) |
-| `paniers` | Panier d'achat (livre, vendeur, acheteur) |
-| `commandes` | Commandes validées (acheteur, livre, prix total) |
-| `messages` | Notifications / messages liés aux utilisateurs |
+| `users` | Users (sellers or buyers), with `statut` (0 = seller, 1 = buyer) and `solde` (balance) |
+| `categories` | Book categories |
+| `livres` | Books published by sellers (name, description, price, category, seller) |
+| `paniers` | Shopping cart (book, seller, buyer) |
+| `commandes` | Validated orders (buyer, book, total price) |
+| `messages` | Notifications / messages linked to users |
 
 ---
 
-## 🔄 Logique de paiement
+## 🔄 Payment Logic
 
-Le flux d'achat garantit l'intégrité des transactions :
+The purchase flow guarantees transaction integrity:
 
-1. Vérification du solde de l'acheteur.
-2. Transfert du montant du/des livre(s) vers le(s) vendeur(s).
-3. Création de la commande.
-4. Vidage du panier.
+1. Checking the buyer's balance.
+2. Transferring the amount of the book(s) to the seller(s).
+3. Creating the order.
+4. Emptying the cart.
 
-L'ensemble de ces opérations est exécuté dans une **transaction de base de données**, afin d'éviter tout état incohérent en cas d'erreur.
+All of these operations are executed within a **database transaction**, to avoid any inconsistent state in case of an error.
 
 ---
 
-## 🚀 Installation et démarrage
+## 🚀 Installation and Setup
 
-### Prérequis
+### Prerequisites
 - PHP 8.1+
 - Composer
-- Docker et Docker Compose
+- Docker and Docker Compose
 
-### 1. Cloner le projet
+### 1. Clone the project
 
 ```bash
 git clone https://github.com/Dieudonne6/ProjetLivre.git
 cd ProjetLivre
 ```
 
-### 2. Configurer l'environnement
+### 2. Set up the environment
 
 ```bash
 cp .env.example .env
 ```
 
-Adapter au besoin les variables `DB_*` (le `docker-compose.yml` fourni utilise déjà `DB_DATABASE=livre`, `DB_USERNAME=laravel`, `DB_PASSWORD=secret`, `DB_PORT=3307`).
+Adjust the `DB_*` variables if needed (the provided `docker-compose.yml` already uses `DB_DATABASE=livre`, `DB_USERNAME=laravel`, `DB_PASSWORD=secret`, `DB_PORT=3307`).
 
-### 3. Lancer les conteneurs
+### 3. Start the containers
 
 ```bash
 docker compose up -d
 ```
 
-Cela démarre :
-- `app` — l'application Laravel (PHP)
-- `nginx` — serveur web, exposé sur http://localhost:8000
-- `mysql` — base de données MySQL, exposée sur le port 3307
-- `phpmyadmin` — interface d'administration, sur http://localhost:8080
+This starts:
+- `app` — the Laravel application (PHP)
+- `nginx` — web server, exposed on http://localhost:8000
+- `mysql` — MySQL database, exposed on port 3307
+- `phpmyadmin` — admin interface, on http://localhost:8080
 
-### 4. Installer les dépendances et préparer l'application
+### 4. Install dependencies and set up the application
 
 ```bash
 docker compose exec app composer install
@@ -199,51 +199,50 @@ docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
 ```
 
-### 5. Générer la documentation Swagger
+### 5. Generate the Swagger documentation
 
 ```bash
 docker compose exec app php artisan l5-swagger:generate
 ```
 
-La documentation est alors accessible sur : `http://localhost:8000/api/documentation`
+The documentation is then available at: `http://localhost:8000/api/documentation`
 
 ---
 
-## 🧪 Comptes de test
+## 🧪 Test Accounts
 
-| Rôle | Email | Mot de passe |
+| Role | Email | Password |
 |---|---|---|
-| Acheteur | buyer@gmail.com | buyer12345 |
-| Vendeur | seller@gmail.com | seller12345 |
+| Buyer | buyer@gmail.com | buyer12345 |
+| Seller | seller@gmail.com | seller12345 |
 
 ---
 
-## 📚 Exemple de parcours (acheteur)
+## 📚 Example Flow (buyer)
 
-1. Inscription ou connexion.
-2. Parcours des livres disponibles.
-3. Ajout de livres au panier.
-4. Recharge du solde du compte.
-5. Validation du paiement.
-6. La commande est créée, le solde des vendeurs est crédité et le panier est vidé.
-
-
----
-
-## 📈 Ce que ce projet met en avant
-
-- Conception d'API REST
-- Authentification sécurisée (Sanctum)
-- Transactions financières fiables
-- Relations Eloquent (utilisateurs, livres, commandes, panier)
-- Environnement conteneurisé et déployable (Docker + Render)
-- Documentation d'API interactive (Swagger)
+1. Register or log in.
+2. Browse the available books.
+3. Add books to the cart.
+4. Top up the account balance.
+5. Validate the payment.
+6. The order is created, sellers' balances are credited, and the cart is emptied.
 
 ---
 
-## 👨‍💻 Auteur
+## 📈 What This Project Demonstrates
 
-**K. Franck Dieu-donné AYENAN D.**
+- REST API design
+- Secure authentication (Sanctum)
+- Reliable financial transactions
+- Eloquent relationships (users, books, orders, cart)
+- Containerized, deployable environment (Docker + Render)
+- Interactive API documentation (Swagger)
+
+---
+
+## 👨‍💻 Author
+
+**Franck Dieu-donné AYENAN**
 Backend Developer
 
 📧 kossoufranck6@gmail.com
