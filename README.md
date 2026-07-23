@@ -227,13 +227,6 @@ La documentation est alors accessible sur : `http://localhost:8000/api/documenta
 5. Validation du paiement.
 6. La commande est créée, le solde des vendeurs est crédité et le panier est vidé.
 
----
-
-## ✅ Tests
-
-```bash
-docker compose exec app php artisan test
-```
 
 ---
 
